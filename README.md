@@ -6,8 +6,6 @@ An AI-powered web application designed to help users practice for the IELTS spea
 
 **Live Demo:** **[chat.waiyip.life](https://chat.waiyip.life)**
 
-![Phone Call Screen](./static/screenshots/call.png)
-
 ---
 
 ## 🌟 Features
