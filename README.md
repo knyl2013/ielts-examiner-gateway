@@ -45,8 +45,8 @@ You need to register and obtain API keys for these services before you begin:
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/knyl2013/ielts-examiner-frontend.git
-    cd ielts-examiner-frontend
+    git clone https://github.com/knyl2013/ielts-examiner-gateway.git
+    cd ielts-examiner-gateway
     ```
 
 2.  **Create a local environment file:**

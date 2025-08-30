@@ -61,7 +61,7 @@
                 <p class="sub-headline">
                     Don't just see your score. Understand exactly how to improve with specific, word-for-word
                     suggestions on grammar, vocabulary, and phrasing.
-                p>
+                </p>
             </div>
             <img
                 src="/screenshots/suggestions.png"
@@ -89,16 +89,16 @@
             <div class="textContent">
                 <h2 class="headline">Practice with Confidence.</h2>
                 <p class="sub-headline">
-                    Your privacy is our priority. We never save your audio recordings. See the code on
+                    We never save your audio recordings. See our code on
                     <a
-                        href="https://github.com/knyl2013/ielts-examiner-frontend"
+                        href="https://github.com/knyl2013/ielts-examiner-gateway"
                         target="_blank"
                         rel="noopener noreferrer">GitHub</a
                     >.
                 </p>
             </div>
             <a
-                href="https://github.com/knyl2013/ielts-examiner-frontend"
+                href="https://github.com/knyl2013/ielts-examiner-gateway"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="View source code on GitHub"
