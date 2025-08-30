@@ -370,8 +370,13 @@
 					}
 				} else if (message.type === 'unmute.additional_outputs') {
 					console.log('Received metadata message:', message);
-					conversationState = message.args.debug_dict.conversation_state;
 					chatHistory = message.args.chat_history;
+				} else if (message.type === 'unmute.response.text.delta.ready' || message.type === 'input_audio_buffer.speech_stopped') {
+					conversationState = 'bot_speaking';
+				} else if (message.type === 'response.audio.done') {
+					conversationState = 'waiting_for_user';
+				} else if (message.type === 'input_audio_buffer.speech_started') {
+					conversationState = 'user_speaking';
 				} else {
 					console.log('Received unknown message:', message);
 				}
