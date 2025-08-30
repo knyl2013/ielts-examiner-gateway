@@ -29,6 +29,11 @@
     let dailyLimit: number = Infinity; // Default to infinity, will be updated
     let isLoadingUsage: boolean = true; // For potential UI feedback
 
+	let currentSubtitleSentence: string = '';
+	let subtitleWords: string[] = [];
+	let userSubtitleSentence: string = '';
+	let userSubtitleWords: string[] = [];
+
     const checkUsage = async () => {
         isLoadingUsage = true;
         const currentUser = get(userStore);
@@ -377,6 +382,18 @@
 					conversationState = 'waiting_for_user';
 				} else if (message.type === 'input_audio_buffer.speech_started') {
 					conversationState = 'user_speaking';
+					currentSubtitleSentence = '';
+					subtitleWords = [];
+				} else if (message.type === 'response.text.delta') {
+					if (userSubtitleWords.length > 0) {
+						userSubtitleSentence = '';
+						userSubtitleWords = [];
+					}
+					currentSubtitleSentence += message.delta + ' ';
+					subtitleWords = currentSubtitleSentence.trim().split(/\s+/);
+				}  else if (message.type === 'conversation.item.input_audio_transcription.delta') {
+					userSubtitleSentence += message.delta + ' ';
+					userSubtitleWords = userSubtitleSentence.trim().split(/\s+/);
 				} else {
 					console.log('Received unknown message:', message);
 				}
@@ -476,6 +493,22 @@
 			class="profileImageContainerSpeakingBorder"
 			class:shouldShow={conversationState === 'bot_speaking'}
 		></div>
+
+		{#if userSubtitleWords.length > 0}
+			<div class="subtitle-container user-subtitle-container">
+				{#each userSubtitleWords as word, i (i)}
+					<span class="subtitle-word user-subtitle-word">{word}</span>
+				{/each}
+			</div>
+		{/if}
+
+		{#if subtitleWords.length > 0}
+			<div class="subtitle-container">
+				{#each subtitleWords as word, i (i)}
+					<span class="subtitle-word">{word}</span>
+				{/each}
+			</div>
+		{/if}
 	</main>
 
 	<footer class="footerControls">
@@ -804,6 +837,56 @@
 
 	.loadingBarContainer.finished {
         animation: fade-out 1s ease-out forwards;
+	}
+
+	.subtitle-container {
+		position: absolute;
+		bottom: 25%; /* Position it above the footer controls */
+		left: 10%;
+		right: 10%;
+		display: flex;
+		flex-wrap: wrap; /* Allow words to wrap to the next line */
+		justify-content: center;
+		align-items: center;
+		gap: 0.2em; /* Small space between words */
+		pointer-events: none; /* Prevent subtitles from blocking clicks */
+	}
+
+	.subtitle-word {
+		background-color: rgba(0, 0, 0, 0.7);
+		color: #fff;
+		padding: 0.2em 0.5em;
+		border-radius: 4px;
+		font-size: 1rem;
+		font-weight: 500;
+		line-height: 1.4;
+		
+		/* Animation */
+		opacity: 0;
+		transform: translateY(10px);
+		animation: fadeInWord 0.3s ease-out forwards;
+	}
+
+	.user-subtitle-word {
+		background-color: #fff;
+		color: rgba(0, 0, 0, 0.7);
+		padding: 0.2em 0.5em;
+		border-radius: 4px;
+		font-size: 1rem;
+		font-weight: 500;
+		line-height: 1.4;
+		
+		/* Animation */
+		opacity: 0;
+		transform: translateY(10px);
+		animation: fadeInWord 0.3s ease-out forwards;
+	}
+
+	@keyframes fadeInWord {
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 
 	@keyframes fade-out {
