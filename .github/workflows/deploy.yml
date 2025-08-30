@@ -24,7 +24,7 @@ jobs:
             set -e
 
             # Define variables for maintainability
-            APP_DIR="~/ielts-examiner"
+            APP_DIR=./ielts-examiner
             REPO_URL="https://github.com/${{ github.repository }}.git"
 
             # Check if the application directory exists.
