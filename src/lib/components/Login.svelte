@@ -24,9 +24,15 @@
     };
 
     async function handleMemoryToggle() {
-        // The bind:checked already updated the store's local state.
-        // Now we persist this change to Firebase.
         await updateUserSettings({ memory: $userSettingsStore.memory });
+    }
+
+    async function handleAiSubtitleToggle() {
+        await updateUserSettings({ showAiSubtitles: $userSettingsStore.showAiSubtitles });
+    }
+
+    async function handleUserSubtitleToggle() {
+        await updateUserSettings({ showUserSubtitles: $userSettingsStore.showUserSubtitles });
     }
 
     onMount(() => {
@@ -80,6 +86,28 @@
                                 type="checkbox"
                                 bind:checked={$userSettingsStore.memory}
                                 on:change={handleMemoryToggle}
+                            />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="popup-item-toggle">
+                        <span>AI Subtitles</span>
+                        <label class="switch">
+                            <input
+                                type="checkbox"
+                                bind:checked={$userSettingsStore.showAiSubtitles}
+                                on:change={handleAiSubtitleToggle}
+                            />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="popup-item-toggle">
+                        <span>Your Subtitles</span>
+                        <label class="switch">
+                            <input
+                                type="checkbox"
+                                bind:checked={$userSettingsStore.showUserSubtitles}
+                                on:change={handleUserSubtitleToggle}
                             />
                             <span class="slider round"></span>
                         </label>

@@ -32,7 +32,8 @@
                 `<strong>${PUBLIC_SIGNED_USER_DAILY_LIMIT}</strong> IELTS ${
                     PUBLIC_SIGNED_USER_DAILY_LIMIT === 1 ? 'report' : 'reports'
                 } per day`,
-                'AI Memory Control'
+                'AI Memory Control',
+                'Subtitle Control'
             ],
             cta: {
                 text: 'Sign Up for Free',
@@ -43,7 +44,11 @@
             title: 'Plus User',
             price: 'Premium',
             status: 'coming-soon',
-            features: ['<strong>Unlimited</strong> IELTS reports per day', 'AI Memory Control'],
+            features: [
+                '<strong>Unlimited</strong> IELTS reports per day',
+                'AI Memory Control',
+                'Subtitle Control'
+            ],
             cta: {
                 text: 'Coming Soon',
                 action: () => {} // This action won't be triggered

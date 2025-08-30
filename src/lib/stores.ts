@@ -51,6 +51,8 @@ interface ReportState {
 
 export interface UserSettings {
   memory: boolean;
+  showAiSubtitles: boolean;
+  showUserSubtitles: boolean;
 }
 
 export interface UserProfile {
@@ -58,7 +60,7 @@ export interface UserProfile {
     plan: 'signed' | 'plus';
 }
 
-export const userSettingsStore = writable<UserSettings>({ memory: false });
+export const userSettingsStore = writable<UserSettings>({ memory: true, showAiSubtitles: true, showUserSubtitles: true });
 
 export const userStore = readable<User | null | undefined>(undefined, (set) => {
   const unsubscribe = onAuthStateChanged(auth, (user) => {

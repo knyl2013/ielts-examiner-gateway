@@ -494,7 +494,7 @@
 			class:shouldShow={conversationState === 'bot_speaking'}
 		></div>
 
-		{#if userSubtitleWords.length > 0}
+		{#if userSubtitleWords.length > 0 && (!get(userStore) || $userSettingsStore.showUserSubtitles)}
 			<div class="subtitle-container user-subtitle-container">
 				{#each userSubtitleWords as word, i (i)}
 					<span class="subtitle-word user-subtitle-word">{word}</span>
@@ -502,7 +502,7 @@
 			</div>
 		{/if}
 
-		{#if subtitleWords.length > 0}
+		{#if subtitleWords.length > 0 && (!get(userStore) || $userSettingsStore.showAiSubtitles)}
 			<div class="subtitle-container">
 				{#each subtitleWords as word, i (i)}
 					<span class="subtitle-word">{word}</span>
