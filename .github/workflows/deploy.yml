@@ -1,0 +1,54 @@
+name: Update Frontend Server
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v1.0.3
+        timeout-minutes: 20
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          command_timeout: 20m
+          script: |
+            # Exit immediately if a command exits with a non-zero status.
+            set -e
+
+            # Define variables for maintainability
+            APP_DIR="~/ielts-examiner"
+            REPO_URL="https://github.com/${{ github.repository }}.git"
+
+            # Check if the application directory exists.
+            if [ -d "$APP_DIR" ]; then
+              echo "Application directory exists. Pulling latest changes..."
+              cd "$APP_DIR"
+              git fetch origin main
+              git reset --hard origin/main # Forcefully overwrite local changes
+              git pull origin main
+            else
+              echo "Application directory not found. Cloning repository..."
+              git clone "$REPO_URL" "$APP_DIR"
+              cd "$APP_DIR"
+            fi
+
+            echo "Shutting down existing containers..."
+            # Use --remove-orphans to clean up containers from old services
+            docker-compose down --remove-orphans
+
+            echo "Building and starting new containers..."
+            # Use --force-recreate to ensure containers are recreated even if the image is the same
+            docker-compose up -d --build --force-recreate
+
+            echo "Cleaning up old unused Docker images..."
+            docker image prune -af
+
+            echo "Deployment successful!"
