@@ -4,9 +4,10 @@
     import HistoryChart from '$lib/components/HistoryChart.svelte';
     import { userStore, type ReportData } from '$lib/stores';
     import { db } from '$lib/firebase';
-    import { collection, query, where, getDocs, orderBy, Timestamp } from 'firebase/firestore';
+    import { collection, query, where, getDocs, orderBy, Timestamp, writeBatch } from 'firebase/firestore';
 	import type { HistoryEntry } from '../../types/ChatHistory';
 	import Login from '$lib/components/Login.svelte';
+    import { get } from 'svelte/store';
 
     let historyEntries: HistoryEntry[] = [];
     let error: string | null = null;
@@ -107,6 +108,44 @@
             minute: '2-digit'
         });
     };
+
+    const handleClearHistory = async () => {
+        const isConfirmed = confirm(
+            'Are you sure you want to delete all your report history? This action cannot be undone.'
+        );
+        if (!isConfirmed) {
+            return;
+        }
+
+        isLoading = true;
+        error = null;
+        const user = get(userStore);
+
+        try {
+            if (user) {
+                // Logged-in user: Delete documents from Firestore
+                // Use a batch delete for efficiency
+                const batch = writeBatch(db);
+                const reportsRef = collection(db, 'reports');
+                const q = query(reportsRef, where('userId', '==', user.uid));
+                const querySnapshot = await getDocs(q);
+                querySnapshot.forEach((doc) => {
+                    batch.delete(doc.ref);
+                });
+                await batch.commit();
+            } else {
+                // Guest user: Remove from localStorage
+                localStorage.removeItem('reportHistory');
+            }
+            // Clear the local state to update the UI
+            historyEntries = [];
+        } catch (e) {
+            console.error('Failed to clear history:', e);
+            error = 'Could not clear your report history. Please try again.';
+        } finally {
+            isLoading = false;
+        }
+    };
 </script>
 
 <div class="reportContainer">
@@ -176,6 +215,13 @@
             </section>
         {/if}
     </main>
+    {#if !isLoading && historyEntries.length > 0}
+        <footer class="fixedCtaFooter">
+            <button class="ctaButton clearButton" on:click={handleClearHistory}>
+                Clear All History
+            </button>
+        </footer>
+    {/if}
 </div>
 
 
@@ -283,5 +329,46 @@
     .reportItemScore {
         font-size: 2.5rem;
         font-weight: 700;
+    }
+
+    .fixedCtaFooter {
+        width: 100%;
+        z-index: 100;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 5px;
+        padding-top: 5px;
+        background: linear-gradient(
+            to top,
+            rgba(58, 39, 35, 1) 20%,
+            rgba(58, 39, 35, 0.8) 70%,
+            rgba(58, 39, 35, 0)
+        );
+        pointer-events: none;
+    }
+
+    .ctaButton {
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 9999px;
+        padding: 18px 35px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        pointer-events: auto;
+    }
+
+    .ctaButton:hover {
+        transform: scale(1.05);
+    }
+
+    .clearButton {
+        background-color: #ff3b30; /* iOS-style destructive red */
+    }
+
+    .clearButton:hover {
+        background-color: #ff453a; /* Lighter red on hover */
     }
 </style>
