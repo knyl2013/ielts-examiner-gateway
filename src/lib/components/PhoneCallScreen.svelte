@@ -496,17 +496,17 @@
 
 		{#if userSubtitleWords.length > 0 && (!get(userStore) || $userSettingsStore.showUserSubtitles)}
 			<div class="subtitle-container user-subtitle-container">
-				{#each userSubtitleWords as word, i (i)}
-					<span class="subtitle-word user-subtitle-word">{word}</span>
-				{/each}
+				<p class="subtitle-text-block">
+					{userSubtitleWords.join(" ")}
+				</p>
 			</div>
 		{/if}
 
 		{#if subtitleWords.length > 0 && (!get(userStore) || $userSettingsStore.showAiSubtitles)}
 			<div class="subtitle-container">
-				{#each subtitleWords as word, i (i)}
-					<span class="subtitle-word">{word}</span>
-				{/each}
+				<p class="subtitle-text-block">
+					{subtitleWords.join(" ")}
+				</p>
 			</div>
 		{/if}
 	</main>
@@ -852,41 +852,20 @@
 		pointer-events: none; /* Prevent subtitles from blocking clicks */
 	}
 
-	.subtitle-word {
-		background-color: rgba(0, 0, 0, 0.7);
+	.subtitle-text-block {
+		position: absolute;
+		background-color: rgba(0, 0, 0, 0.75);
 		color: #fff;
-		padding: 0.2em 0.5em;
+		padding: 0.5em 0.5em;
 		border-radius: 4px;
-		font-size: 1rem;
 		font-weight: 500;
-		line-height: 1.4;
-		
-		/* Animation */
-		opacity: 0;
-		transform: translateY(10px);
-		animation: fadeInWord 0.3s ease-out forwards;
+		box-decoration-break: clone;
+		-webkit-box-decoration-break: clone;
 	}
 
-	.user-subtitle-word {
+	.user-subtitle-container .subtitle-text-block {
 		background-color: #fff;
-		color: rgba(0, 0, 0, 0.7);
-		padding: 0.2em 0.5em;
-		border-radius: 4px;
-		font-size: 1rem;
-		font-weight: 500;
-		line-height: 1.4;
-		
-		/* Animation */
-		opacity: 0;
-		transform: translateY(10px);
-		animation: fadeInWord 0.3s ease-out forwards;
-	}
-
-	@keyframes fadeInWord {
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
+		color: rgba(0, 0, 0, 0.75);
 	}
 
 	@keyframes fade-out {
