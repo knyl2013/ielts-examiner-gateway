@@ -21,8 +21,8 @@
 	import { format } from 'timeago.js';
 	import { PUBLIC_GUEST_DAILY_LIMIT, PUBLIC_SIGNED_USER_DAILY_LIMIT } from '$env/static/public';
 
-	export let name: string = 'IELTS Examiner';
-	export let description: string = 'Estimate your IELTS speaking score by chatting to AI';
+	export let name: string = 'IELTS Estimator';
+	export let description: string = 'Estimate your IELTS speaking score (unofficial) by chatting to AI';
 	export let imageUrl: string = '/ielts-examiner.png';
 
 	let reportsToday: number = 0;
