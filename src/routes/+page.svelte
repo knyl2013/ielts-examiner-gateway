@@ -33,11 +33,11 @@
             <div class="textContent">
                 <h1 class="headline">Master Your IELTS Speaking.</h1>
                 <p class="sub-headline">
-                    Practice with an AI examiner anytime, anywhere. Get instant, detailed feedback to boost
+                    Practice with your personalized AI anytime, anywhere. Get instant, detailed feedback to boost
                     your confidence and your score.
                 </p>
             </div>
-            <img src="/screenshots/call.png" alt="IELTS AI Examiner call screen" class="screenshot" />
+            <img src="/screenshots/call.png" alt="IELTS AI Partner call screen" class="screenshot" />
         </section>
 
         <section class="featureSection">
