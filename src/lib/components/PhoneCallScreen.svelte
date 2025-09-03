@@ -3,6 +3,7 @@
 	import FaPhoneSlash from 'svelte-icons/fa/FaPhoneSlash.svelte';
 	import FaPhone from 'svelte-icons/fa/FaPhone.svelte';
 	import FaCheckCircle from 'svelte-icons/fa/FaCheckCircle.svelte';
+	import FaClosedCaptioning from 'svelte-icons/fa/FaClosedCaptioning.svelte';
 
 	import { DEFAULT_UNMUTE_CONFIG, instructionsToPlaceholder, type Instructions, type UnmuteConfig } from '$lib/config';
 
@@ -11,7 +12,7 @@
 	import { base64DecodeOpus, base64EncodeOpus } from '$lib/audioUtil';
 	import type { ChatMessage } from '$lib/chatHistory';
 
-	import { generateReport, now, userSettingsStore, userStore, type ReportData, userProfileStore } from '$lib/stores';
+	import { generateReport, now, userSettingsStore, userStore, type ReportData, userProfileStore, updateUserSettings } from '$lib/stores';
 	import { goto } from '$app/navigation';
 	import Login from './Login.svelte';
 	import { get } from 'svelte/store';
@@ -33,6 +34,8 @@
 	let subtitleWords: string[] = [];
 	let userSubtitleSentence: string = '';
 	let userSubtitleWords: string[] = [];
+
+	let localOnSubtitle: boolean = false;
 
     const checkUsage = async () => {
         isLoadingUsage = true;
@@ -244,6 +247,22 @@
 		// Now, start the report generation in the background. The page is already
 		// listening for the result via the reportStore.
 		await generateReport(chatHistory, isReportReady, callDuration);
+	};
+
+	const handleSubtitleBtnClick = async () => {
+		const currentUser = get(userStore);
+		if (currentUser) {
+			const isOn = $userSettingsStore.showUserSubtitles && $userSettingsStore.showAiSubtitles;
+			userSettingsStore.update(currentSettings => {
+                return {
+                    ...currentSettings,
+                    showUserSubtitles: !isOn,
+                    showAiSubtitles: !isOn
+                };
+            });
+		} else {
+			localOnSubtitle = !localOnSubtitle;
+		}
 	};
 
 	const requestWakeLock = async () => {
@@ -494,7 +513,7 @@
 			class:shouldShow={conversationState === 'bot_speaking'}
 		></div>
 
-		{#if userSubtitleWords.length > 0 && (!get(userStore) || $userSettingsStore.showUserSubtitles)}
+		{#if userSubtitleWords.length > 0 && (!get(userStore) ? localOnSubtitle : $userSettingsStore.showUserSubtitles)}
 			<div class="subtitle-container user-subtitle-container">
 				<p class="subtitle-text-block">
 					{userSubtitleWords.join(" ")}
@@ -502,7 +521,7 @@
 			</div>
 		{/if}
 
-		{#if subtitleWords.length > 0 && (!get(userStore) || $userSettingsStore.showAiSubtitles)}
+		{#if subtitleWords.length > 0 && (!get(userStore) ? localOnSubtitle : $userSettingsStore.showAiSubtitles)}
 			<div class="subtitle-container">
 				<p class="subtitle-text-block">
 					{subtitleWords.join(" ")}
@@ -512,7 +531,7 @@
 	</main>
 
 	<footer class="footerControls">
-		{#if !isOngoing && readyState !== 'CONNECTING'}
+		{#if !isOngoing && readyState !== 'CONNECTING' && false}
 			<button class={`controlButton startCallButton ${status}`} on:click={handleStartCall}>
 				{#if status === 'online'}
 					<FaPhone />
@@ -529,6 +548,13 @@
 				<div class="loadingBar"></div>
 			</div>
 		{:else}
+			<button
+				class="controlButton subtitleButton"
+				class:subtitleButtonOn={!get(userStore) ? localOnSubtitle : ($userSettingsStore.showUserSubtitles && $userSettingsStore.showAiSubtitles)}
+				on:click={handleSubtitleBtnClick}
+			>
+				<FaClosedCaptioning />
+			</button>
 			<button class="controlButton endCallButton" on:click={handleStopCall}>
 				<FaPhoneSlash />
 			</button>
@@ -631,7 +657,7 @@
 		justify-content: center;
 		align-items: center;
 		padding: 0 20px 50px 20px;
-    gap: 12px;
+    	gap: 12px;
 	}
 
 	.controlButton {
@@ -648,7 +674,24 @@
 		transition: background-color 0.2s ease;
 	}
 
-	.controlButton:active {
+	.subtitleButton {
+		width: 25px;
+		height: 25px;	
+	}
+
+	.subtitleButtonOn {
+		background-color: rgba(0, 0, 0, .8);
+	}
+
+	.controlButton.subtitleButtonOn:active {
+		background-color: rgba(0, 0, 0, 0.7);
+	}
+
+	.controlButton.subtitleButtonOn:hover {
+		background-color: rgba(0, 0, 0, 0.6);
+	}
+
+	.controlButton.controlButton:active {
 		background-color: rgba(255, 255, 255, 0.4);
 	}
 
