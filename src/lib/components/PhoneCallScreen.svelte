@@ -531,7 +531,7 @@
 	</main>
 
 	<footer class="footerControls">
-		{#if !isOngoing && readyState !== 'CONNECTING' && false}
+		{#if !isOngoing && readyState !== 'CONNECTING'}
 			<button class={`controlButton startCallButton ${status}`} on:click={handleStartCall}>
 				{#if status === 'online'}
 					<FaPhone />
