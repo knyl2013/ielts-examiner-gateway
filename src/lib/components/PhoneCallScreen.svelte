@@ -21,6 +21,7 @@
 
 	import { format } from 'timeago.js';
 	import { PUBLIC_GUEST_DAILY_LIMIT, PUBLIC_SIGNED_USER_DAILY_LIMIT } from '$env/static/public';
+    import HistoryButton from './HistoryButton.svelte';
 
 	export let name: string = 'IELTS Estimator';
 	export let description: string = 'Estimate your IELTS speaking score (unofficial) by chatting to AI';
@@ -479,23 +480,9 @@
 			</p>
 		</div>
 		<div>
-			<button class="historyButton"
-				class:hide={isOngoing}
-				on:click={() => goto('/history')} aria-label="View History"
-			>
-				<svg
-					width="28"
-					height="28"
-					viewBox="0 0 24 24"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						d="M13 3C8.03 3 4 7.03 4 12H1L4.89 15.89L9 12H6C6 8.13 9.13 5 13 5C16.87 5 20 8.13 20 12C20 15.87 16.87 19 13 19C11.07 19 9.32 18.21 8.06 16.94L6.64 18.36C8.27 19.99 10.51 21 13 21C17.97 21 22 16.97 22 12C22 7.03 17.97 3 13 3ZM12 8V13L16.28 15.54L17 14.33L13.5 12.25V8H12Z"
-						fill="white"
-					/>
-				</svg>
-			</button>
+			{#if isOngoing}
+				<HistoryButton />
+			{/if}
 			<Login />
 		</div>
 	</header>
@@ -789,23 +776,6 @@
 		border-radius: 50%;
 		border: 1px solid lightgrey;
 		animation: pulse 1s infinite;
-	}
-
-	.historyButton {
-		position: absolute;
-		right: 105px;
-		top: 13px;
-		background: none;
-		border: none;
-		color: white;
-		cursor: pointer;
-		padding: 5px;
-		opacity: 0.8;
-		transition: opacity 0.2s ease;
-	}
-
-	.historyButton.hide {
-		display: none;
 	}
 
 	.reportIndicator {
