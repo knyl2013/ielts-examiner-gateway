@@ -23,7 +23,7 @@
 	import { PUBLIC_GUEST_DAILY_LIMIT, PUBLIC_SIGNED_USER_DAILY_LIMIT } from '$env/static/public';
     import HistoryButton from './HistoryButton.svelte';
 
-	export let name: string = 'IELTS Estimator';
+	export let name: string = 'IELTS Partner';
 	export let description: string = 'Estimate your IELTS speaking score (unofficial) by chatting to AI';
 	export let imageUrl: string = '/ielts-examiner.png';
 
