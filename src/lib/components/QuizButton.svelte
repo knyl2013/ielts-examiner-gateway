@@ -1,10 +1,12 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
+
 </script>
 
 <button
   class="quizButton"
-  on:click={() => alert('Coming Soon!')}
-  aria-label="Start Quiz (Coming Soon)"
+  on:click={() => goto('/quiz')}
+  aria-label="Start Quiz"
 >
   <svg
     width="27"
@@ -18,7 +20,7 @@
       fill="white"
     />
   </svg>
-  <span class="tooltip">Take a Quiz</span>
+  <span class="tooltip">Take a Quiz (From your past conversation)</span>
 </button>
 
 <style>
@@ -32,7 +34,7 @@
     color: white;
     cursor: pointer;
     padding: 5px;
-    opacity: 0.3;
+    opacity: 0.8;
     transition: opacity 0.2s ease;
   }
 
