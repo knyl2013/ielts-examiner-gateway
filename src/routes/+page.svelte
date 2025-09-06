@@ -2,6 +2,7 @@
     import { goto } from '$app/navigation';
     import HistoryButton from '$lib/components/HistoryButton.svelte';
     import Login from '$lib/components/Login.svelte';
+    import QuizButton from '$lib/components/QuizButton.svelte';
 
     const handleStart = () => {
         goto('/call');
@@ -10,6 +11,7 @@
 
 <header class="header">
     <div>
+        <QuizButton />
         <HistoryButton />
         <Login />
     </div>

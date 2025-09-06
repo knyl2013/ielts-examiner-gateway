@@ -6,7 +6,8 @@
 	import { doc, getDoc, Timestamp } from 'firebase/firestore';
 	import { db } from '$lib/firebase';
 	import Login from '$lib/components/Login.svelte';
-    import HistoryButton from '$lib/components/HistoryButton.svelte';
+  import HistoryButton from '$lib/components/HistoryButton.svelte';
+    import QuizButton from '$lib/components/QuizButton.svelte';
 
   // Define types for clarity
   type ReportState = {
@@ -119,6 +120,7 @@
       <div class="callerInfo">
         <p>Result</p>
       </div>
+      <QuizButton />
       <HistoryButton />
       <Login />
     </header>

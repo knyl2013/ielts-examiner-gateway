@@ -22,6 +22,7 @@
 	import { format } from 'timeago.js';
 	import { PUBLIC_GUEST_DAILY_LIMIT, PUBLIC_SIGNED_USER_DAILY_LIMIT } from '$env/static/public';
     import HistoryButton from './HistoryButton.svelte';
+    import QuizButton from './QuizButton.svelte';
 
 	export let name: string = 'IELTS Partner';
 	export let description: string = 'Estimate your IELTS speaking score (unofficial) by chatting to AI';
@@ -480,7 +481,8 @@
 			</p>
 		</div>
 		<div>
-			{#if isOngoing}
+			{#if !isOngoing}
+				<QuizButton />
 				<HistoryButton />
 			{/if}
 			<Login />

@@ -1,46 +1,49 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
 </script>
 
-<button class="historyButton" on:click={() => goto('/history')} aria-label="View History">
+<button
+  class="quizButton"
+  on:click={() => alert('Coming Soon!')}
+  aria-label="Start Quiz (Coming Soon)"
+>
   <svg
-    width="28"
-    height="28"
+    width="27"
+    height="27"
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M13 3C8.03 3 4 7.03 4 12H1L4.89 15.89L9 12H6C6 8.13 9.13 5 13 5C16.87 5 20 8.13 20 12C20 15.87 16.87 19 13 19C11.07 19 9.32 18.21 8.06 16.94L6.64 18.36C8.27 19.99 10.51 21 13 21C17.97 21 22 16.97 22 12C22 7.03 17.97 3 13 3ZM12 8V13L16.28 15.54L17 14.33L13.5 12.25V8H12Z"
+      d="M11 18H13V16H11V18ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 6C9.79 6 8 7.79 8 10H10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 12 11 11.75 11 15H13C13 12.75 16 12.5 16 10C16 7.79 14.21 6 12 6Z"
       fill="white"
     />
   </svg>
-  <span class="tooltip">Show History</span>
+  <span class="tooltip">Take a Quiz</span>
 </button>
 
 <style>
-  .historyButton {
+  .quizButton {
     position: absolute;
-    right: 95px;
-    top: 14px;
+    /* Positioned to the left of the history button */
+    right: 130px; 
+    top: 15px;
     background: none;
     border: none;
     color: white;
     cursor: pointer;
     padding: 5px;
-    opacity: 0.8;
+    opacity: 0.3;
     transition: opacity 0.2s ease;
   }
 
-  .historyButton:hover {
+  .quizButton:hover {
     opacity: 1;
   }
 
   /* Hide the tooltip by default */
-  .historyButton .tooltip {
+  .quizButton .tooltip {
     visibility: hidden;
     opacity: 0;
-    
     /* Tooltip appearance */
     width: max-content; /* Or a fixed width like 120px */
     background-color: #2e2e2e;
@@ -49,7 +52,6 @@
     border-radius: 6px;
     padding: 5px 10px;
     font-size: 14px;
-    
     /* Position the tooltip */
     position: absolute;
     z-index: 1; /* Ensure it's on top of other elements */
@@ -59,8 +61,7 @@
 
     transition: opacity 0.2s ease;
   }
-  
-  .historyButton:hover .tooltip {
+  .quizButton:hover .tooltip {
     visibility: visible;
     opacity: 1;
   }
