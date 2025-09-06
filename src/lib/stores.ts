@@ -71,6 +71,13 @@ export const userStore = readable<User | null | undefined>(undefined, (set) => {
 
 export const userProfileStore = writable<UserProfile | null>(null);
 
+const defaultSettings: UserSettings = {
+  memory: false,
+  showAiSubtitles: false,
+  showUserSubtitles: false
+};
+
+
 userStore.subscribe(async (user) => {
     if (user) {
         const userDocRef = doc(db, 'users', user.uid);
@@ -87,13 +94,12 @@ userStore.subscribe(async (user) => {
             userSettingsStore.set(profile.settings);
         } else {
             // First-time user or no settings, create default and set it
-            const defaultSettings: UserSettings = { memory: false };
             await setDoc(userDocRef, { settings: defaultSettings }, { merge: true });
             userSettingsStore.set(defaultSettings);
         }
     } else {
         // User is logged out, reset to default state
-        userSettingsStore.set({ memory: false });
+        userSettingsStore.set(defaultSettings);
     }
 });
 
