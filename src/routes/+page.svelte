@@ -77,6 +77,20 @@
 
         <section class="featureSection">
             <div class="textContent">
+                <h2 class="headline">Reinforce Your Learning.</h2>
+                <p class="sub-headline">
+                    Turn your past mistakes into strengths. Our quiz feature creates personalized tests from your specific suggestions, helping you master corrections through active recall.
+                </p>
+            </div>
+            <img
+                src="/screenshots/quiz.png"
+                alt="IELTS quiz showing a multiple-choice question"
+                class="screenshot"
+            />
+        </section>
+
+        <section class="featureSection">
+            <div class="textContent">
                 <h2 class="headline">Practice with Confidence.</h2>
                 <p class="sub-headline">
                     We never save your audio recordings. See our code on
