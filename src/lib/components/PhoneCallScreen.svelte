@@ -230,10 +230,15 @@
 		}
 	};
 
-	const handleStopCall = async () => {
-		if (!isReportReady) {
-			if (!confirm("The report is not ready yet. Are you sure you want to stop the call?")) {
+	const handleStopCall = async (shouldGenerateReport: boolean = true) => {
+		if (!shouldGenerateReport && isOngoing) {
+			if (!confirm('Are you sure to end the ongoing call? Report will not be generated.')) {
 				return;
+			}
+		}
+		if (shouldGenerateReport && !isReportReady) {
+			if (!confirm("The report is not ready yet. Are you sure you want to stop the call?")) {
+				goto('/');
 			}
 		}
 		isOngoing = false;
@@ -242,13 +247,17 @@
 		callStartTime = null;
 		readyState = 'CLOSED';
 
-		// Navigate to the special 'latest' route immediately.
-		// The report page will show the 'generating' state from the store.
-		goto('/report/latest');
+		if (shouldGenerateReport) {
+			// Navigate to the special 'latest' route immediately.
+			// The report page will show the 'generating' state from the store.
+			goto('/report/latest');
 
-		// Now, start the report generation in the background. The page is already
-		// listening for the result via the reportStore.
-		await generateReport(chatHistory, isReportReady, callDuration);
+			// Now, start the report generation in the background. The page is already
+			// listening for the result via the reportStore.
+			await generateReport(chatHistory, isReportReady, callDuration);
+		} else {
+			goto('/');
+		}
 	};
 
 	const handleSubtitleBtnClick = async () => {
@@ -461,6 +470,11 @@
 
 <div class="callContainer">
 	<header class="header">
+		<button class="backButton" on:click={() => handleStopCall(false)} aria-label="Back">
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12L15.41 7.41Z" fill="white" />
+			</svg>
+		</button>
 		<div class="callerInfo">
 			<h1 class="name-container"><span class={`server-indicator ${status}`}></span> {name}</h1>
 			<h5 class="description-container">{description}</h5>
@@ -601,7 +615,7 @@
 	.backButton {
 		position: absolute;
 		left: 15px;
-		top: 55px;
+		top: 15px;
 		background: none;
 		border: none;
 		color: white;
