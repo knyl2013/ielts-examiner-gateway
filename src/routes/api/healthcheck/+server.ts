@@ -1,17 +1,17 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';
+import { LOCALHOST_AI } from '$env/static/private';
 
 export const POST: RequestHandler = async ({ request }) => {
     const { podId } = (await request.json()) as { podId: string };
-
-    if (!podId) {
+    const isLocalAi = LOCALHOST_AI === 'true';
+    if (!podId && !isLocalAi) {
         console.error("podId variable is not set.");
         throw error(500, 'Server configuration error.');
     }
-    
 
-    const healthcheckUrl = `https://${podId}-8000.proxy.runpod.net/metrics`;
+    const healthcheckUrl = isLocalAi ? 'http://localhost:8000/metrics' : `https://${podId}-8000.proxy.runpod.net/metrics`;
 
     try {
         const response = await fetch(healthcheckUrl, {
