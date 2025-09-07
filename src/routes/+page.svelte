@@ -94,9 +94,9 @@
 
         <section class="featureSection">
             <div class="textContent">
-                <h2 class="headline">Practice with Confidence.</h2>
+                <h2 class="headline">Practice offline.</h2>
                 <p class="sub-headline">
-                    We never save your audio recordings. See our code on
+                    This project is open-source. If you have a decent PC (Nvidia GPU with 8+ VRAM), you can run the whole service from
                     <a
                         href="https://github.com/knyl2013/ielts-examiner-gateway"
                         target="_blank"

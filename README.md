@@ -55,11 +55,16 @@ You need to register and obtain API keys for these services before you begin:
 
 3.  **Configure your environment variables:**
     Open the newly created `.env` file and fill in your project credentials and any other required API endpoints.
+    
+    The only required env variables for running the project are: `OPENAI_API_KEY`, `OPENAI_BASE_URL` and `OPENAI_MODEL` for any OpenAI-compatible model (e.g. OpenAI, Gemini, Ollama) to analyze the conversation and estimate IELTS score after the conversation is finsihed.
 
-4.  **Run the start script:**
+4. **Launch unmute AI**
+    Go to https://github.com/kyutai-labs/unmute and startup unmute using docker-compose. Make sure http://localhost:8000 is accessible before moving on to the next step. 
+
+5.  **Run the start script:**
     This script will automatically install all necessary dependencies and launch the development server.
     ```bash
     bash start.sh
     ```
 
-You should now be able to view the application at `http://localhost:3000` (or another port specified in the script's output).
+You should now be able to view the application at `http://localhost:3000`
