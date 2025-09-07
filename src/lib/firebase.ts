@@ -41,8 +41,6 @@ if (firebaseEnabled) {
     // Ensure the flag is updated if config is missing even if VITE_DISABLE_FIREBASE is not set
     (firebaseEnabled as boolean) = false;
   }
-} else {
-  console.log("Firebase is disabled via VITE_DISABLE_FIREBASE flag.");
 }
 
 

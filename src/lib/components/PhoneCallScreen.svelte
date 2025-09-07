@@ -80,7 +80,6 @@
             }
         }
         isLoadingUsage = false;
-        console.log(`Usage Check: ${reportsToday} reports used today. Limit is ${dailyLimit}.`);
     };
 
 	$: if ($userStore !== undefined) {
@@ -183,10 +182,6 @@
 	};
 
 	function onOpusRecorded(opus: Uint8Array) {
-		console.log(
-			`[PhoneCallScreen] onOpusRecorded called. readyState: ${readyState}, opus size: ${opus.length}`
-		);
-		console.log(ws);
 		if (ws && readyState === 'OPEN') {
 			ws.send(
 				JSON.stringify({
@@ -282,7 +277,7 @@
 			const wakeLock = await navigator.wakeLock.request('screen');
 		} catch (err: any) {
 			// The wake lock request fails - usually system-related, such as low battery.
-			console.log(`${err.name}, ${err.message}`);
+			console.error(`${err.name}, ${err.message}`);
 		}
 	};
 
@@ -312,12 +307,10 @@
 
 	$: {
 		if (shouldConnect && !ws && webSocketUrl != null) {
-			console.log('Connecting to WebSocket...');
 			readyState = 'CONNECTING';
 			const newWs = new WebSocket(webSocketUrl, ['realtime']);
 
 			newWs.onopen = async () => {
-				console.log('WebSocket connected!');
 				readyState = 'OPEN';
 				let finalInstructions: Instructions = unmuteConfig.instructions;
 				const currentUser = get(userStore);
@@ -325,7 +318,6 @@
 				let summaries: string[] = [];
 
 				if (currentUser && settings.memory) {
-					console.log('Memory feature enabled. Fetching recent conversation summaries...');
 					try {
 						const reportsRef = collection(db, 'reports');
 						const q = query(
@@ -346,7 +338,6 @@
 						// If fetching fails, we'll just proceed without memory.
 					}
 				} else if (!currentUser) {
-					console.log('Memory feature enabled by default for guests. Fetching recent conversation summaries...');
 					const reportHistory = JSON.parse(localStorage.getItem('reportHistory') || '[]') as ReportData[];
 					summaries = reportHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5).map(
 						(data) => {
@@ -362,7 +353,6 @@
 					const fullText = `${memoryPrefix}\n\n${originalInstructionsText}`;
 
 					finalInstructions = { type: 'constant', text: fullText };
-					console.log('Added conversation memory to instructions.');
 				} else {
 					// This is a first-time user with no conversation history.
 					const welcomePrefix = `This is the user's first conversation. Please provide a warm and encouraging welcome. Let them know you're an AI partner here to help them practice English, and an IELTS score estimation will be generated after the conversation and they can stop whenever they want.`;
@@ -370,7 +360,6 @@
 					const fullText = `${welcomePrefix}\n\n${originalInstructionsText}`;
 
 					finalInstructions = { type: 'constant', text: fullText };
-					console.log('This is a first-time user. Added welcoming instructions.');
 				}
 				const sessionPayload = {
 					instructions: finalInstructions,
@@ -378,7 +367,6 @@
 					voice: 'unmute-prod-website/developer-1.mp3', // Male voice
 					allow_recording: true
 				};
-				console.log('WebSocket connected! Sending config:', sessionPayload);
 				newWs.send(
 					JSON.stringify({
 						type: 'session.update',
@@ -402,10 +390,9 @@
 							[opus.buffer]
 						);
 					} else {
-						console.log('Received response.audio.delta but message.delta is undefined or null');
+						console.error('Received response.audio.delta but message.delta is undefined or null');
 					}
 				} else if (message.type === 'unmute.additional_outputs') {
-					console.log('Received metadata message:', message);
 					chatHistory = message.args.chat_history;
 				} else if (message.type === 'unmute.response.text.delta.ready' || message.type === 'input_audio_buffer.speech_stopped') {
 					conversationState = 'bot_speaking';
@@ -426,12 +413,11 @@
 					userSubtitleSentence += message.delta + ' ';
 					userSubtitleWords = userSubtitleSentence.trim().split(/\s+/);
 				} else {
-					console.log('Received unknown message:', message);
+					console.warn('Received unknown message:', message);
 				}
 			};
 
 			newWs.onclose = () => {
-				console.log('WebSocket disconnected.');
 				ws = null;
 				// If the connection closes unexpectedly, update the UI state
 				if (isOngoing) {
@@ -450,7 +436,6 @@
 
 			ws = newWs;
 		} else if (!shouldConnect && ws) {
-			console.log('Disconnecting WebSocket...');
 			ws.close();
 			ws = null;
 			readyState = 'CLOSED';
