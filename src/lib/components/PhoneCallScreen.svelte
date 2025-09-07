@@ -211,7 +211,7 @@
 		}
 		// 1. Ask for microphone permission
 		const mediaStream = await askMicrophoneAccess();
-
+		requestWakeLock();
 		// 2. If we get permission, set up audio processing
 		if (mediaStream) {
 			readyState = 'CONNECTING';
