@@ -4,7 +4,7 @@
 
 An AI-powered web application designed to help users practice for the IELTS speaking test. Get instant, detailed feedback and track your progress over time.
 
-**Live Demo:** **[chat.waiyip.life](https://chat.waiyip.life)**
+**Live Demo:** **[ielts.waiyip.life](https://ielts.waiyip.life)**
 
 ---
 

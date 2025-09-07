@@ -10,6 +10,7 @@ export default defineConfig({
         port: 3000,
         allowedHosts: [
             'chat.waiyip.life',
+            'ielts.waiyip.life'
         ]
     }
 });
