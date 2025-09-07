@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
     import { userStore, type SpecificSuggestion, type ReportData } from '$lib/stores';
     import type { User } from 'firebase/auth';
-    import { db } from '$lib/firebase';
+    import { db, firebaseEnabled } from '$lib/firebase';
     import { collection, query, where, getDocs } from 'firebase/firestore';
     import { goto } from '$app/navigation';
     import Login from '$lib/components/Login.svelte';
@@ -168,7 +168,9 @@
             </svg>
         </button>
         <HistoryButton />
-        <Login />
+        {#if firebaseEnabled}
+            <Login />
+        {/if}
     </header>
 
     <main class="mainContent">

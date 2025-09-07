@@ -3,6 +3,7 @@
     import HistoryButton from '$lib/components/HistoryButton.svelte';
     import Login from '$lib/components/Login.svelte';
     import QuizButton from '$lib/components/QuizButton.svelte';
+    import { firebaseEnabled } from '$lib/firebase';
 
     const handleStart = () => {
         goto('/call');
@@ -13,7 +14,9 @@
     <div>
         <QuizButton />
         <HistoryButton />
-        <Login />
+        {#if firebaseEnabled}
+            <Login />
+        {/if}
     </div>
 </header>
 

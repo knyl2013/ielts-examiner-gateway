@@ -4,6 +4,7 @@
     import { userProfileStore } from '$lib/stores';
     import { signInWithGoogle } from '$lib/auth';
 	import { PUBLIC_GUEST_DAILY_LIMIT, PUBLIC_SIGNED_USER_DAILY_LIMIT } from '$env/static/public';
+    import { firebaseEnabled } from '$lib/firebase';
 
     const handleBack = () => {
         goto('/');
@@ -76,7 +77,9 @@
                 <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="white" />
             </svg>
         </button>
-        <Login />
+        {#if firebaseEnabled}
+            <Login />
+        {/if}
     </div>
 </header>
 

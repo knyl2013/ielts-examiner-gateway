@@ -17,7 +17,7 @@
 	import Login from './Login.svelte';
 	import { get } from 'svelte/store';
 	import { collection, getCountFromServer, getDocs, limit, orderBy, query, Timestamp, where } from 'firebase/firestore';
-	import { db } from '$lib/firebase';
+	import { db, firebaseEnabled } from '$lib/firebase';
 
 	import { format } from 'timeago.js';
 	import { PUBLIC_GUEST_DAILY_LIMIT, PUBLIC_SIGNED_USER_DAILY_LIMIT } from '$env/static/public';
@@ -485,7 +485,9 @@
 				<QuizButton />
 				<HistoryButton />
 			{/if}
-			<Login />
+			{#if firebaseEnabled}
+				<Login />
+			{/if}
 		</div>
 	</header>
 

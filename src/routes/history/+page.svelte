@@ -3,7 +3,7 @@
     import { goto } from '$app/navigation';
     import HistoryChart from '$lib/components/HistoryChart.svelte';
     import { userStore, type ReportData } from '$lib/stores';
-    import { db } from '$lib/firebase';
+    import { db, firebaseEnabled } from '$lib/firebase';
     import { collection, query, where, getDocs, orderBy, Timestamp, writeBatch } from 'firebase/firestore';
 	import type { HistoryEntry } from '../../types/ChatHistory';
 	import Login from '$lib/components/Login.svelte';
@@ -45,7 +45,7 @@
             isLoading = true;
 
             try {
-                if (user) {
+                if (user && db) {
                     const reportsRef = collection(db, 'reports');
                     // Create a query to get reports for this user, ordered by creation time
                     const q = query(
@@ -122,7 +122,7 @@
         const user = get(userStore);
 
         try {
-            if (user) {
+            if (user && db) {
                 // Logged-in user: Delete documents from Firestore
                 // Use a batch delete for efficiency
                 const batch = writeBatch(db);
@@ -160,7 +160,9 @@
                 <h1>Report History</h1>
                 <p>Your past performance and progress</p>
             </div>
-            <Login />
+			{#if firebaseEnabled}
+				<Login />
+			{/if}
         </header>
         {#if isLoading}
             <div class="statusContainer">

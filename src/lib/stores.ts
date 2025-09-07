@@ -1,7 +1,7 @@
 import { readable, writable } from 'svelte/store';
 import type { ChatMessage } from './chatHistory';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-import { auth, db } from '$lib/firebase';
+import { auth, db, firebaseEnabled } from '$lib/firebase';
 import { get } from 'svelte/store';
 import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 
@@ -63,6 +63,11 @@ export interface UserProfile {
 export const userSettingsStore = writable<UserSettings>({ memory: true, showAiSubtitles: true, showUserSubtitles: true });
 
 export const userStore = readable<User | null | undefined>(undefined, (set) => {
+  if (!firebaseEnabled || !auth) {
+    set(null);
+    return () => {}; // Return an empty unsubscribe function
+  }
+  
   const unsubscribe = onAuthStateChanged(auth, (user) => {
     set(user);
   });
@@ -79,7 +84,7 @@ const defaultSettings: UserSettings = {
 
 
 userStore.subscribe(async (user) => {
-    if (user) {
+    if (firebaseEnabled && db && user) {
         const userDocRef = doc(db, 'users', user.uid);
         const userDocSnap = await getDoc(userDocRef);
 
@@ -104,6 +109,10 @@ userStore.subscribe(async (user) => {
 });
 
 export const updateUserSettings = async (settings: Partial<UserSettings>) => {
+    if (!firebaseEnabled || !db) {
+      console.warn("Firebase is disabled. User settings cannot be updated.");
+      return;
+    }
     const currentUser = get(userStore);
     if (!currentUser) return;
 
@@ -143,7 +152,7 @@ export const generateReport = async (chatHistory: ChatMessage[], isReportReady: 
 
     const reportData: ReportData = await response.json();
     
-    if (currentUser) {
+    if (currentUser && db) {
       await addDoc(collection(db, 'reports'), {
         ...reportData,
         userId: currentUser.uid,
@@ -177,6 +186,10 @@ export const saveFeedback = async (
 
     if (!currentUser) {
         throw new Error('You must be logged in to submit feedback.');
+    }
+
+    if (!db) {
+      throw new Error('Database connection is not available.');
     }
 
     if (rating < 1 || rating > 5) {

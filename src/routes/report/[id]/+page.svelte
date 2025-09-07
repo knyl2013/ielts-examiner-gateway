@@ -4,7 +4,7 @@
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
 	import { doc, getDoc, Timestamp } from 'firebase/firestore';
-	import { db } from '$lib/firebase';
+	import { db, firebaseEnabled } from '$lib/firebase';
 	import Login from '$lib/components/Login.svelte';
   import HistoryButton from '$lib/components/HistoryButton.svelte';
     import QuizButton from '$lib/components/QuizButton.svelte';
@@ -122,7 +122,9 @@
       </div>
       <QuizButton />
       <HistoryButton />
-      <Login />
+			{#if firebaseEnabled}
+				<Login />
+			{/if}
     </header>
   
    <main class="mainContent">
