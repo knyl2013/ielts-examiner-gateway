@@ -163,6 +163,8 @@
 		
 		notifyBackend('register');
 
+		requestWakeLock();
+
 		return () => {
 			if (shutdownAudio) shutdownAudio();
 			if (intervalId) clearInterval(intervalId);
@@ -212,7 +214,6 @@
 
 		// 2. If we get permission, set up audio processing
 		if (mediaStream) {
-			requestWakeLock();
 			readyState = 'CONNECTING';
 			if ((navigator as any).audioSession) {
 				(navigator as any).audioSession.type = 'playback';
