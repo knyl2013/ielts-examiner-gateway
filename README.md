@@ -33,11 +33,6 @@ This project's core speech-to-text and text-to-speech capabilities are powered b
 
 Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
 
-### Requirement
-You need to register and obtain API keys for these services before you begin:
-1) Firebase (for storing IELTS report)
-2) Runpod (for renting GPU instances)
-3) OpenAI compatiable URL (for generating the IELTS report, can be OpenAI/Grok/Gemini)
 
 ### Installation & Setup
 
