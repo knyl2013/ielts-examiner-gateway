@@ -140,7 +140,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 8px 16px;
+        padding: 7px 16px;
         border-radius: 20px;
         border: 1px solid rgba(255, 255, 255, 0.5);
         background: rgba(255, 255, 255, 0.1);
@@ -148,6 +148,7 @@
         font-weight: 500;
         cursor: pointer;
         transition: background-color 0.2s;
+        transform: translateY(2.5px);
     }
 
     .auth-button:hover {
