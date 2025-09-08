@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import FaVolumeMute from 'svelte-icons/fa/FaVolumeMute.svelte';
+	import FaVolumeUp from 'svelte-icons/fa/FaVolumeUp.svelte';
 	import FaPhoneSlash from 'svelte-icons/fa/FaPhoneSlash.svelte';
 	import FaPhone from 'svelte-icons/fa/FaPhone.svelte';
 	import FaCheckCircle from 'svelte-icons/fa/FaCheckCircle.svelte';
@@ -86,6 +88,11 @@
         checkUsage();
     }
 
+	const minVolume = 0;
+	const maxVolume = 3.5;
+	$: progressPercentage = ((volume - minVolume) / (maxVolume - minVolume)) * 100;
+	$: isMuted = volume === 0;
+
 	let isOngoing: boolean = false;
 	let callDuration: number = 0;
 
@@ -105,6 +112,7 @@
 	let podId: string | null = null;
 	let chatHistory: ChatMessage[] = [];
 	let status: 'online' | 'offline' = 'offline';
+	let volume = 1.0;
 
 	const checkHealth = async () => {
 		try {
@@ -214,6 +222,9 @@
 				(navigator as any).audioSession.type = 'playback';
 			}
 			audioProcessorMain = await setupAudio(mediaStream);
+			if (audioProcessorMain && typeof audioProcessorMain.setVolume === 'function') {
+            	audioProcessorMain.setVolume(volume);
+        	}
 			isOngoing = true;
 			callDuration = 0;
 			// 3. Set our trigger to true. The reactive block below will handle the connection.
@@ -317,7 +328,7 @@
 				const settings = get(userSettingsStore);
 				let summaries: string[] = [];
 
-				if (currentUser && settings.memory) {
+				if (currentUser && settings.memory && db) {
 					try {
 						const reportsRef = collection(db, 'reports');
 						const q = query(
@@ -452,6 +463,12 @@
             goto('/pricing');
         }
 	}
+
+	$: {
+		if (audioProcessorMain && typeof audioProcessorMain.setVolume === 'function') {
+			audioProcessorMain.setVolume(volume);
+		}
+	}
 </script>
 
 <div class="callContainer">
@@ -539,6 +556,25 @@
 				<div class="loadingBar"></div>
 			</div>
 		{:else}
+			<div class="volume-slider-container">
+				<button on:click={() => volume = isMuted ? 1.0 : 0} class="volume-icon" aria-label={isMuted ? 'Unmute' : 'Mute'}>
+					{#if isMuted}
+						<FaVolumeMute />
+					{:else}
+						<FaVolumeUp />
+					{/if}
+				</button>
+				<input
+					type="range"
+					min={minVolume}
+					max={maxVolume}
+					step="0.01"
+					bind:value={volume}
+					class="volume-slider"
+					aria-label="Adjust AI volume"
+					style="--progress-percentage: {progressPercentage}%;"
+				/>
+			</div>
 			<button
 				class="controlButton subtitleButton"
 				class:subtitleButtonOn={!get(userStore) ? localOnSubtitle : ($userSettingsStore.showUserSubtitles && $userSettingsStore.showAiSubtitles)}
@@ -883,6 +919,73 @@
 		background-color: #fff;
 		color: rgba(0, 0, 0, 0.75);
 	}
+
+    .volume-slider-container {
+		position: absolute;
+		bottom: 120px;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+        max-width: 200px;
+        margin: 1rem auto;
+    }
+
+    .volume-icon {
+        color: white;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+    
+    .volume-slider {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        cursor: pointer;
+        outline: none;
+        background: transparent;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 16px;
+        width: 16px;
+        background-color: #fff;
+        border-radius: 50%;
+        border: none;
+        margin-top: -6px; 
+    }
+
+    .volume-slider::-moz-range-thumb {
+        height: 16px;
+        width: 16px;
+        background-color: #fff;
+        border-radius: 50%;
+        border: none;
+    }
+
+    .volume-slider::-webkit-slider-runnable-track {
+        height: 4px;
+        background: linear-gradient(to right, 
+            #ffffff var(--progress-percentage), 
+            rgba(255, 255, 255, 0.3) var(--progress-percentage)
+        );
+        border-radius: 2px;
+    }
+
+    .volume-slider::-moz-range-track {
+        height: 4px;
+        background: linear-gradient(to right, 
+            #ffffff var(--progress-percentage), 
+            rgba(255, 255, 255, 0.3) var(--progress-percentage)
+        );
+        border-radius: 2px;
+    }
 
 	@keyframes fade-out {
 		0% {
