@@ -89,7 +89,8 @@
     }
 
 	const minVolume = 0;
-	const maxVolume = 3.5;
+	const maxVolume = 5.0;
+	let volume = maxVolume / 2.0;
 	$: progressPercentage = ((volume - minVolume) / (maxVolume - minVolume)) * 100;
 	$: isMuted = volume === 0;
 
@@ -112,7 +113,7 @@
 	let podId: string | null = null;
 	let chatHistory: ChatMessage[] = [];
 	let status: 'online' | 'offline' = 'offline';
-	let volume = 1.0;
+	
 
 	const checkHealth = async () => {
 		try {
@@ -927,7 +928,7 @@
         align-items: center;
         gap: 0.75rem;
         width: 100%;
-        max-width: 200px;
+        max-width: 300px;
         margin: 1rem auto;
     }
 
@@ -953,8 +954,8 @@
     .volume-slider::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
-        height: 16px;
-        width: 16px;
+        height: 20px;
+        width: 20px;
         background-color: #fff;
         border-radius: 50%;
         border: none;
@@ -962,8 +963,8 @@
     }
 
     .volume-slider::-moz-range-thumb {
-        height: 16px;
-        width: 16px;
+        height: 20px;
+        width: 20px;
         background-color: #fff;
         border-radius: 50%;
         border: none;
