@@ -16,7 +16,6 @@ const getAudioWorkletNode = async (
     }
 };
 
-// ++ The interface is updated to include our new controls.
 export interface AudioProcessor {
     audioContext: AudioContext;
     opusRecorder: OpusRecorder;
@@ -25,8 +24,8 @@ export interface AudioProcessor {
     inputAnalyser: AnalyserNode;
     outputAnalyser: AnalyserNode;
     mediaStreamDestination: MediaStreamAudioDestinationNode;
-    gainNode: GainNode; // ++ Expose the gain node itself
-    setVolume: (level: number) => void; // ++ Expose a function to control it
+    gainNode: GainNode;
+    setVolume: (level: number) => void;
 }
 
 /**
@@ -98,10 +97,8 @@ export function useAudioProcessor(onOpusRecorded: (chunk: Uint8Array) => void) {
         await opusRecorder.initialize;
         opusRecorder.audioContext.createMediaStreamSource(mediaStream).connect(opusRecorder.encoderNode);
 
-        // ++ Create the volume control function
         const setVolume = (level: number) => {
             if (gainNode) {
-                // Use setTargetAtTime for smooth, "click-free" volume changes
                 gainNode.gain.setTargetAtTime(level, audioContext.currentTime, 0.01);
             }
         };
@@ -114,8 +111,8 @@ export function useAudioProcessor(onOpusRecorded: (chunk: Uint8Array) => void) {
             inputAnalyser,
             outputAnalyser,
             mediaStreamDestination,
-            gainNode,    // ++ Add gainNode to the processor object
-            setVolume,   // ++ Add setVolume to the processor object
+            gainNode,
+            setVolume,
         };
         processorStore.set(audioProcessor);
 
