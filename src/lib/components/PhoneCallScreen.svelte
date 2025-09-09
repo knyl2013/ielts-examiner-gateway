@@ -26,7 +26,7 @@
     import HistoryButton from './HistoryButton.svelte';
     import QuizButton from './QuizButton.svelte';
 
-	export let name: string = 'IELTS Partner';
+	export let name: string = 'Speaking Partner';
 	export let description: string = 'Estimate your IELTS speaking score (unofficial) by chatting to AI';
 	export let imageUrl: string = '/ielts-examiner.png';
 
