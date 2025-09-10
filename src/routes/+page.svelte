@@ -96,7 +96,7 @@
             <div class="textContent">
                 <h2 class="headline">Practice offline.</h2>
                 <p class="sub-headline">
-                    This project is open-source. If you have a decent PC (Nvidia GPU with 8+ VRAM), you can run the whole service from
+                    This project is open-source. If you have a decent PC (Nvidia GPU with 8GB+ VRAM), you can clone and run the whole service from
                     <a
                         href="https://github.com/knyl2013/ielts-examiner-gateway"
                         target="_blank"
@@ -240,7 +240,7 @@
     }
 
     .sub-headline a {
-        color: #34c759; /* Use the bright green from the CTA button */
+        color: #34c759;
         font-weight: 500;
         text-decoration: none;
         border-bottom: 1px solid #34c759;

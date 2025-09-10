@@ -20,4 +20,4 @@ echo "Starting or restarting the application with PM2..."
 pm2 startOrRestart ecosystem.config.cjs
 
 echo "✅ Deployment finished successfully!"
-pm2 list # Show the status of the running app
+pm2 list

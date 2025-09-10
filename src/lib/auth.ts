@@ -1,4 +1,3 @@
-// src/lib/auth.ts (example file)
 import { db } from '$lib/firebase';
 import { collection, addDoc, writeBatch, doc } from 'firebase/firestore';
 import type { ReportData } from '$lib/stores';
