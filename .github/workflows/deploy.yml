@@ -40,13 +40,15 @@ jobs:
               cd "$APP_DIR"
             fi
 
+            echo "Building the new image..."
+            docker-compose build --no-cache
+
             echo "Shutting down existing containers..."
             # Use --remove-orphans to clean up containers from old services
             docker-compose down --remove-orphans
 
             echo "Building and starting new containers..."
-            # Use --force-recreate to ensure containers are recreated even if the image is the same
-            docker-compose up -d --build --force-recreate
+            docker-compose up -d
 
             echo "Cleaning up old unused Docker images..."
             docker image prune -af
