@@ -1,15 +1,18 @@
-FROM node:20.19.0-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
 RUN corepack enable
 
 COPY package.json pnpm-lock.yaml ./
-
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-EXPOSE 3000
+RUN pnpm build
 
-CMD ["sh", "deploy-prod.sh"]
+RUN pnpm add -g pm2
+
+EXPOSE 3000 
+
+CMD ["pm2-runtime", "ecosystem.config.cjs"]
