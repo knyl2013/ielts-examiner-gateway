@@ -8,7 +8,7 @@ export PATH="$PNPM_HOME:$PATH"
 echo "Starting deployment..."
 
 echo "Installing dependencies..."
-pnpm install
+pnpm install --force
 
 echo "Building the application..."
 pnpm build
