@@ -8,8 +8,10 @@ COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm install
 
+RUN pnpm add -g pm2
+
 COPY . .
 
 EXPOSE 3000
 
-CMD ["pnpm", "dev-host"]
+CMD ["pm2", "startOrRestart", "ecosystem.config.cjs"]
