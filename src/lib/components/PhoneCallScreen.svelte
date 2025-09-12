@@ -112,9 +112,11 @@
 	let audioProcessorMain: AudioProcessor | undefined;
 	let webSocketUrl: string | null = null;
 	let connectingAudio: HTMLAudioElement;
+	let callReadyAudio: HTMLAudioElement;
 	let podId: string | null = null;
 	let chatHistory: ChatMessage[] = [];
 	let status: 'online' | 'offline' = 'offline';
+	let previousStatus: 'online' | 'offline' = 'offline';
 	let isMicMuted = false;
 	
 
@@ -175,6 +177,8 @@
 		notifyBackend('register');
 
 		requestWakeLock();
+
+		requestNotificationPermission();
 
 		return () => {
 			if (shutdownAudio) shutdownAudio();
@@ -300,6 +304,36 @@
 		}
 	};
 
+    const requestNotificationPermission = async () => {
+        if (!('Notification' in window)) {
+            console.log('This browser does not support desktop notification.');
+            return;
+        }
+        try {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                console.log('Notification permission granted.');
+            } else {
+                console.log('Notification permission denied.');
+            }
+        } catch (error) {
+            console.error('Error requesting notification permission:', error);
+        }
+    };
+
+	const sendServerReadyNotification = async () => {
+        if (!('Notification' in window)) {
+            return;
+        }
+
+        if (Notification.permission === 'granted') {
+            new Notification('Server is Ready!', {
+                body: 'The AI is online. You can start your call now.',
+                icon: '/favicon.png'
+            });
+        }
+    };
+
 	$: callDuration = callStartTime
 		? Math.round(($now.getTime() - callStartTime.getTime()) / 1000)
 		: 0;
@@ -309,6 +343,16 @@
 	$: reportTooltip = isReportReady
 		? 'Ready to generate a report'
 		: 'Report not ready yet. Try to chat a bit more.';
+
+	$: {
+        if (status === 'online' && previousStatus !== 'online') {
+            if (callReadyAudio) {
+                callReadyAudio.play().catch(e => console.error("Call ready audio failed to play:", e));
+            }
+            sendServerReadyNotification();
+        }
+        previousStatus = status;
+    }
 
 	$: {
 		if (connectingAudio) {
@@ -629,6 +673,7 @@
 		{/if}
 	</footer>
 	<audio src="/connecting.wav" bind:this={connectingAudio} loop></audio>
+	<audio src="/call-ready.wav" bind:this={callReadyAudio}></audio>
 </div>
 
 <style>
