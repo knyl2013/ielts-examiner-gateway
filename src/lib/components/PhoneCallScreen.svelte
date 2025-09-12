@@ -6,6 +6,8 @@
 	import FaPhone from 'svelte-icons/fa/FaPhone.svelte';
 	import FaCheckCircle from 'svelte-icons/fa/FaCheckCircle.svelte';
 	import FaClosedCaptioning from 'svelte-icons/fa/FaClosedCaptioning.svelte';
+	import FaMicrophone from 'svelte-icons/fa/FaMicrophone.svelte';
+	import FaMicrophoneSlash from 'svelte-icons/fa/FaMicrophoneSlash.svelte';
 
 	import { DEFAULT_UNMUTE_CONFIG, instructionsToPlaceholder, type Instructions, type UnmuteConfig } from '$lib/config';
 
@@ -113,6 +115,7 @@
 	let podId: string | null = null;
 	let chatHistory: ChatMessage[] = [];
 	let status: 'online' | 'offline' = 'offline';
+	let isMicMuted = false;
 	
 
 	const checkHealth = async () => {
@@ -191,7 +194,7 @@
 	};
 
 	function onOpusRecorded(opus: Uint8Array) {
-		if (ws && readyState === 'OPEN') {
+		if (ws && readyState === 'OPEN' && !isMicMuted) {
 			ws.send(
 				JSON.stringify({
 					type: 'input_audio_buffer.append',
@@ -266,6 +269,10 @@
 		} else {
 			goto('/');
 		}
+	};
+
+	const handleMicBtnClick = () => {
+		isMicMuted = !isMicMuted;
 	};
 
 	const handleSubtitleBtnClick = async () => {
@@ -473,6 +480,12 @@
 </script>
 
 <div class="callContainer">
+	{#if isMicMuted}
+		<div class="announcement">Mic Off</div>
+	{/if}
+	{#if isReportReady}
+		<div class="announcement show-5s">Your IELTS report is ready</div>
+	{/if}
 	<header class="header">
 		<button class="backButton" on:click={() => handleStopCall(false)} aria-label="Back">
 			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -586,6 +599,17 @@
 			<button class="controlButton endCallButton" on:click={handleStopCall}>
 				<FaPhoneSlash />
 			</button>
+			<button
+				class="controlButton micButton"
+				class:mute={!isMicMuted}
+				on:click={handleMicBtnClick}
+			>
+				{#if isMicMuted}
+					<FaMicrophoneSlash />
+				{:else}
+					<FaMicrophone />
+				{/if}
+			</button>
 			<div
 				class="reportIndicator"
 				class:ready={isReportReady}
@@ -593,6 +617,7 @@
 				title={reportTooltip}
 				aria-label={reportTooltip}
 				role="img"
+				style="display: none"
 			>
 				<FaCheckCircle />
 				<div class="reportTooltip">{reportTooltip}</div>
@@ -701,25 +726,27 @@
 		cursor: pointer;
 		transition: background-color 0.2s ease;
 	}
-
-	.subtitleButton {
+	:global(.micButton.mute svg) {
+		transform: scale(0.8);
+	}
+	.subtitleButton, .micButton {
 		width: 25px;
 		height: 25px;	
 	}
 
-	.subtitleButtonOn {
+	.subtitleButtonOn, .micButton.mute {
 		background-color: rgba(0, 0, 0, .8);
 	}
 
-	.controlButton.subtitleButtonOn:active {
+	.controlButton.subtitleButtonOn:active, .micButton.mute:active {
 		background-color: rgba(0, 0, 0, 0.7);
 	}
 
-	.controlButton.subtitleButtonOn:hover {
+	.controlButton.subtitleButtonOn:hover, .micButton.mute:hover {
 		background-color: rgba(0, 0, 0, 0.6);
 	}
 
-	.controlButton.controlButton:active {
+	.controlButton.controlButton:active, .controlButton.micButton:active {
 		background-color: rgba(255, 255, 255, 0.4);
 	}
 
@@ -987,6 +1014,48 @@
         );
         border-radius: 2px;
     }
+
+	.announcement {
+		position: fixed;
+		top: 20px;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 9999;
+
+		padding: 12px 20px;
+		background-color: #2c3e50;
+		color: #ecf0f1;
+		border-radius: 8px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+		
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+		font-size: 0.95rem;
+		font-weight: 500;
+		text-align: center;
+	}
+
+	.announcement.show-5s {
+		animation: slideInAndOut 5s ease-in-out forwards;
+	}
+
+	@keyframes slideInAndOut {
+		0% {
+			opacity: 0;
+			transform: translate(-50%, -50px);
+		}
+		10% {
+			opacity: 1;
+			transform: translate(-50%, 0);
+		}
+		90% {
+			opacity: 1;
+			transform: translate(-50%, 0);
+		}
+		100% {
+			opacity: 0;
+			transform: translate(-50%, -50px);
+		}
+	}
 
 	@keyframes fade-out {
 		0% {
