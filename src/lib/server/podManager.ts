@@ -55,7 +55,44 @@ async function stopPod(podIdToStop: string) {
 }
 
 /**
- * Terminates (deletes) a specific pod. Used for garbage collection.
+ * Delete a specific pod.
+ */
+async function deletePod(podIdToDelete: string) {
+    console.log(`[DELETE] Attempting to delete pod ${podIdToDelete}.`);
+    if (!RUNPOD_API_KEY) {
+        console.error("DELETE_POD_ERROR: RUNPOD_API_KEY env var not set.");
+        return;
+    }
+    // Clear any pending cleanup timer for this pod
+    if (cleanupTimers.has(podIdToDelete)) {
+        clearTimeout(cleanupTimers.get(podIdToDelete)!);
+        cleanupTimers.delete(podIdToDelete);
+        console.log(`[DELETE] Cleared background cleanup timer for ${podIdToDelete}.`);
+    }
+
+    const deleteUrl = `${RUNPOD_API_BASE_URL}/pods/${podIdToDelete}`;
+
+    try {
+        await fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${RUNPOD_API_KEY}` }
+        });
+
+        console.log(`[DELETE] Successfully requested termination for pod ${podIdToDelete}.`);
+    } catch (e) {
+        console.error(`[DELETE] An error occurred while terminating pod ${podIdToDelete}:`, e);
+    } finally {
+        // If this was our active pod, reset the server's state
+        if (activePodId === podIdToDelete) {
+            console.log("[STATE] Resetting active pod state.");
+            activePodId = null;
+            activeConnections = 0;
+        }
+    }
+}
+
+/**
+ * Terminates (stops) a specific pod. Used for garbage collection.
  */
 async function terminatePod(podIdToTerminate: string) {
     console.log(`[TERMINATE] Attempting to terminate pod ${podIdToTerminate}.`);
@@ -296,6 +333,8 @@ async function getOrCreatePod(): Promise<string | null> {
                 }
                 break;
             }
+            // Found an unusable pod id
+            deletePod(reusablePod.id);
         }
     }
     
