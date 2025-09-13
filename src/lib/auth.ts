@@ -11,7 +11,7 @@ import { auth } from '$lib/firebase';
  */
 export const migrateLocalReportsToFirebase = async (userId: string) => {
   const localReportsRaw = localStorage.getItem('reportHistory');
-  if (!localReportsRaw) {
+  if (!localReportsRaw || !db) {
     return;
   }
 
@@ -47,6 +47,7 @@ export const migrateLocalReportsToFirebase = async (userId: string) => {
 };
 
 export const signInWithGoogle = async () => {
+    if (!auth) return;
     const provider = new GoogleAuthProvider();
     try {
         const result = await signInWithPopup(auth, provider);
@@ -59,6 +60,7 @@ export const signInWithGoogle = async () => {
 };
 
 export const signOutUser = async () => {
+    if (!auth) return;
     try {
         await signOut(auth);
     } catch (error) {

@@ -50,9 +50,9 @@
         const startOfDay = new Date();
         startOfDay.setHours(0, 0, 0, 0);
 
-        if (currentUser && profile) {
+        if (currentUser && profile && db) {
             // --- Logic for Signed-in User ---
-			dailyLimit = profile.plan === 'plus' ? Infinity : PUBLIC_SIGNED_USER_DAILY_LIMIT;
+			dailyLimit = profile.plan === 'plus' ? Infinity : parseInt(PUBLIC_SIGNED_USER_DAILY_LIMIT);
 
             try {
                 const reportsRef = collection(db, 'reports');
@@ -72,7 +72,7 @@
             }
         } else {
             // --- Logic for Guest User ---
-            dailyLimit = PUBLIC_GUEST_DAILY_LIMIT;
+            dailyLimit = parseInt(PUBLIC_GUEST_DAILY_LIMIT);
             try {
                 const localHistory: ReportData[] = JSON.parse(
                     localStorage.getItem('reportHistory') || '[]'
@@ -640,7 +640,7 @@
 			>
 				<FaClosedCaptioning />
 			</button>
-			<button class="controlButton endCallButton" on:click={handleStopCall}>
+			<button class="controlButton endCallButton" on:click={(e) => handleStopCall()}>
 				<FaPhoneSlash />
 			</button>
 			<button
