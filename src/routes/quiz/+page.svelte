@@ -273,7 +273,7 @@
         background: radial-gradient(circle at 50% 50%, #5a4743, #3a2723);
     }
     .header {
-        padding: 20px 20px 20px;
+        padding: 25px 20px 25px;
         text-align: center;
         position: relative;
         flex-shrink: 0;
