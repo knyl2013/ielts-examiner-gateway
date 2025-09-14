@@ -247,14 +247,16 @@
 
 	const handleStopCall = async (shouldGenerateReport: boolean = true) => {
 		if (!shouldGenerateReport && isOngoing) {
-			if (!confirm('Are you sure to end the ongoing call? Report will not be generated.')) {
-				return;
-			}
-		}
-		if (shouldGenerateReport && !isReportReady) {
-			if (!confirm("The report is not ready yet. Are you sure you want to stop the call?")) {
+			if (confirm('Are you sure to end the ongoing call? Report will not be generated.')) {
 				goto('/');
 			}
+			return;
+		}
+		if (shouldGenerateReport && !isReportReady) {
+			if (confirm("The report is not ready yet. Are you sure you want to stop the call?")) {
+				goto('/');
+			}
+			return;
 		}
 		isOngoing = false;
 		shouldConnect = false;
