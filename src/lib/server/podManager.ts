@@ -1,4 +1,4 @@
-import { RUNPOD_API_KEY } from '$env/static/private';
+import { RUNPOD_API_KEY, RUNPOD_TEMPLATE_ID } from '$env/static/private';
 import { error } from '@sveltejs/kit';
 
 // --- State ---
@@ -21,7 +21,7 @@ const POD_CREATE_CONFIG = {
     "containerDiskInGb": 20,
     "volumeInGb": 20,
     "ports": ["8000/http","22/tcp"],
-    "templateId": "ogn0w7m9jb",
+    "templateId": RUNPOD_TEMPLATE_ID,
     "gpuCount": 1
 };
 
