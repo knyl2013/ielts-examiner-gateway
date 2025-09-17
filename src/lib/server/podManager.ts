@@ -176,8 +176,6 @@ async function getPodDetails(podId: string): Promise<any | null> {
 }
 
 
-// --- Cron Job and Cleanup Logic ---
-
 /**
  * The main logic for the cron job.
  */
@@ -210,12 +208,7 @@ export function initializePodManager() {
     
     console.log(`[INIT] Pod Manager Initialized.`);
     console.log(`[CRON] Inactivity-check cron job started. Runs every ${CRON_JOB_INTERVAL_MS / 60000} minutes.`);
-
-    // You could also run an initial cleanup of all pods on startup here
-    // listPods().then(pods => pods && scheduleCleanupForIdlePods(pods, null));
 }
-
-// --- Public API for Server Routes ---
 
 /**
  * Registers a client connection. Acquires and ensures a pod is running.
@@ -279,8 +272,6 @@ export function unregisterConnection() {
 /**
  * Schedules a 30-minute termination timer for any pod that is not the active one.
  * This acts as a garbage collector for orphaned pods.
- * @param allPods - The list of all pods from the API.
- * @param currentActivePodId - The ID of the pod we are using, which should NOT be cleaned up.
  */
 function scheduleCleanupForIdlePods(allPods: any[], currentActivePodId: string | null) {
     console.log(`[CLEANUP] Scanning ${allPods.length} pods for background cleanup scheduling.`);
