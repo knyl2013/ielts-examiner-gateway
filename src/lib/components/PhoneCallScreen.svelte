@@ -91,7 +91,7 @@
     }
 
 	const minVolume = 0;
-	const maxVolume = 5.0;
+	const maxVolume = 3.5;
 	let volume = maxVolume / 2.0;
 	$: progressPercentage = ((volume - minVolume) / (maxVolume - minVolume)) * 100;
 	$: isMuted = volume === 0;
