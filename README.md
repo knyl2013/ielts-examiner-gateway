@@ -54,12 +54,25 @@ Follow these instructions to get a copy of the project up and running on your lo
     The only required env variables for running the project are: `OPENAI_API_KEY`, `OPENAI_BASE_URL` and `OPENAI_MODEL` for any OpenAI-compatible model (e.g. OpenAI, Gemini, Ollama) to analyze the conversation and estimate IELTS score after the conversation is finsihed.
 
 4. **Launch unmute AI**
-    Go to https://github.com/kyutai-labs/unmute and startup unmute using docker-compose. Make sure http://localhost:8000 is accessible before moving on to the next step. 
+    Copy the environment file and docker-compose file to unmute project after filling the necessary variables
+    ```bash
+    cp .env unmute/.env
+    ```
+
+    Start up the project
+    ```bash
+    docker-compose --project-directory ./unmute -f ./docker-compose-unmute.yaml up -d
+    ```
 
 5.  **Run the start script:**
     This script will automatically install all necessary dependencies and launch the development server.
     ```bash
     bash start.sh
+    ```
+
+6. **Stop the service**
+    ```bash
+    docker-compose --project-directory ./unmute down
     ```
 
 You should now be able to view the application at `http://localhost:3000`
