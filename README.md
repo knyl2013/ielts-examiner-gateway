@@ -61,7 +61,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
     Start up the project
     ```bash
-    docker-compose --project-directory ./unmute -f ./docker-compose-unmute.yaml up -d
+    docker-compose --project-directory ./unmute -f ./docker-compose-unmute.yaml up -d --build
     ```
 
 5.  **Run the start script:**
