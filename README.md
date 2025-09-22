@@ -59,6 +59,14 @@ Follow these instructions to get a copy of the project up and running on your lo
     cp .env unmute/.env
     ```
 
+    Install and setup NVDIA container tookit
+    ```bash
+    sudo apt-get update
+    sudo apt-get install -y nvidia-container-toolkit
+    sudo nvidia-ctk runtime configure --runtime=docker
+    sudo systemctl restart docker
+    ```
+
     Start up the project
     ```bash
     docker-compose --project-directory ./unmute -f ./docker-compose-unmute.yaml up -d --build
