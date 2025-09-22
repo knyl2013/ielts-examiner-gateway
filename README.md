@@ -4,7 +4,7 @@
 
 An AI-powered web application designed to help users practice for the IELTS speaking test. Get instant, detailed feedback and track your progress over time.
 
-**Live Demo:** **[ielts.waiyip.life](https://ielts.waiyip.life)**
+**Live Demo:** **[chat.waiyip.life](https://chat.waiyip.life)**
 
 ---
 
@@ -67,20 +67,20 @@ Follow these instructions to get a copy of the project up and running on your lo
     sudo systemctl restart docker
     ```
 
-    Start up the project
+    Start up the unmute project
     ```bash
     docker-compose --project-directory ./unmute -f ./docker-compose-unmute.yaml up -d --build
+    ```
+
+    Stop the unmute project
+    ```bash
+    docker-compose --project-directory ./unmute down
     ```
 
 5.  **Run the start script:**
     This script will automatically install all necessary dependencies and launch the development server.
     ```bash
     bash start.sh
-    ```
-
-6. **Stop the service**
-    ```bash
-    docker-compose --project-directory ./unmute down
     ```
 
 You should now be able to view the application at `http://localhost:3000`
