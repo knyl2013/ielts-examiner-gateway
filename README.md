@@ -69,12 +69,12 @@ Follow these instructions to get a copy of the project up and running on your lo
 
     Start up the unmute project
     ```bash
-    docker-compose --project-directory ./unmute -f ./docker-compose-unmute.yaml up -d --build
+    docker compose --project-directory ./unmute -f ./docker-compose-unmute.yaml up -d --build
     ```
 
     Stop the unmute project
     ```bash
-    docker-compose --project-directory ./unmute down
+    docker compose --project-directory ./unmute down
     ```
 
 5.  **Run the start script:**
