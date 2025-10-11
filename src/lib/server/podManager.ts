@@ -1,4 +1,4 @@
-import { RUNPOD_API_KEY, RUNPOD_TEMPLATE_ID } from '$env/static/private';
+import { RUNPOD_API_KEY, RUNPOD_TEMPLATE_ID, RUNPOD_GPU_TYPE } from '$env/static/private';
 import { error } from '@sveltejs/kit';
 
 // --- State ---
@@ -17,7 +17,7 @@ const RUNPOD_API_BASE_URL = 'https://rest.runpod.io/v1';
 const POD_CREATE_CONFIG = {
     "cloudType": "SECURE",
     "name": "SvelteKit On-Demand Pod",
-    "gpuTypeIds": ["NVIDIA GeForce RTX 4090"],
+    "gpuTypeIds": [RUNPOD_GPU_TYPE],
     "containerDiskInGb": 20,
     "volumeInGb": 20,
     "ports": ["8000/http","22/tcp"],
