@@ -838,7 +838,7 @@
 		height: 12px;
 		border-radius: 50%;
 		border: 1px solid white;
-		margin-top: 2vh;
+		margin-top: 15px;
 		margin-right: 12px;
 	}
 
